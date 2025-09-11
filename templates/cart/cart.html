@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Online Grocery Shopping and Online Supermarket in India - bigbasket</title>
+  <link rel="shortcut icon"
+    href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3XfekLrDCd5cGYZHG0XelJNQ-hUCq2Jj6Vg&s"
+    type="image/x-icon">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="{% static 'css/carts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script src="{% static 'js/style.js' %}"></script>
+
+</head>
+<body>
+
+<header class="header-bar">
+    <div class="logo-section">
+      <a href="{% url 'home' %}">
+      <img class="logo-img"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr3xOZrREto9WNjqxVOjZy4D7m7ByimftjKg&s"
+        alt="bigbasket logo"></a>
+    </div>
+
+    <!-- <input type="text" class="search-box" placeholder="Search for Products..."> -->
+    <div class="search-bar">
+      <span class="search-icon">
+        <svg height="20" width="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="9" cy="9" r="7" stroke="#99bb42" stroke-width="2" />
+          <line x1="14.3" y1="14.3" x2="18" y2="18" stroke="#99bb42" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </span>
+      <div style="position:relative;">
+      <input id="searchInput"
+              type="text"
+              name="q"
+              class="search-input"
+              placeholder="Search for Products..."
+              autocomplete="off" />
+      <div id="searchSuggestions" class="search-suggestions"></div>
+      </div>
+
+    </div>
+
+
+    <div class="delivery-section">
+      <div class="delivery-info">
+        <div>
+          <span class="delivery-icon">&#9889;</span>
+          <span class="delivery-text">Delivery in <b>5 mins</b></span>
+        </div>
+        <span class="delivery-location">Select Location</span>
+
+      </div>
+    </div>
+
+    {% if user.is_authenticated %}
+
+    <div style="position:relative;display:inline-block;">
+      <div class="cart-icon" onclick="toggleProfileDropdown()" style="cursor:pointer;">
+        <img src="{% static 'images/profileicon.png' %}" alt="profile-btn" id="profile-btn">
+      </div>
+      <div class="dropdown-menu" id="profileDropdown">
+        <a href="{% url 'profile_page' %}" class="dropdown-link" >My Account</a>
+        <a href="#" class="dropdown-link">
+          My Basket
+          <span class="badge badge-red">0 item</span>
+        </a>
+        <a href="#" class="dropdown-link">My Orders</a>
+        <a href="{% url 'products:wishlist_and_cart' %}" class="dropdown-link">My Wishlist</a>
+        <a href="#" class="dropdown-link">
+          My Wallet
+          <span class="badge badge-green">₹0</span>
+        </a>
+        <a href="#" class="dropdown-link">Contact Us</a>
+        <a href="{% url 'logout' %}" class="dropdown-link logout-link">Logout</a>
+      </div>
+    </div>
+
+    {% else %}
+    <a href="{% url 'login' %}" class="login-btn">Login/ Sign Up</a>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <div class="cart-icon">
+      <a href="{% url 'cart:cart' %}">
+        <img src="{% static 'images/image.png' %}" alt="cart-icon">
+      </a>
+    </div>
+    {% else %}
+    <div class="cart-icon">
+      <a href="{% url 'login' %}">
+        <img src="{% static 'images/image.png' %}" alt="cart-icon">
+      </a>
+    </div>
+    {% endif %}
+
+  </header>
+
+  <!-- Menu Bar -->
+  <div class="menu-bar">
+    <button class="category-btn">
+      Shop by Category
+      <svg class="chevron" width="18" height="18" viewBox="0 0 20 20">
+        <polygon points="5,8 10,13 15,8" fill="#fff" />
+      </svg>
+    </button>
+    <div class="menu-links-scroll">
+      {% for cat in categories %}
+    <a class="menu-link {% if category and cat.id == category.id %}highlighted{% endif %}"
+       href="{% url 'products:category_products' category_id=cat.id %}">
+       {{ cat.name }}
+    </a>
+    {% endfor %}
+
+      <svg width="36" height="16" style="vertical-align:middle;" viewBox="0 0 36 20" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="7,5 13,10 7,15" fill="none" stroke="#222" stroke-width="2" />
+        <polyline points="19,5 25,10 19,15" fill="none" stroke="#222" stroke-width="2" />
+      </svg>
+    </div>
+
+    <span class="divider"></span>
+
+    <span class="menu-btn smart-basket">
+      <svg width="22" height="22" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="#a2bb78" stroke-width="2" fill="none" />
+        <rect x="8" y="11" width="8" height="5" rx="1.5" fill="#e6f2c8" />
+        <rect x="7" y="7" width="10" height="7" rx="1" stroke="#a2bb78" stroke-width="1" fill="none" />
+      </svg>
+      <span class="smart-basket-label">Smart<br>basket</span>
+    </span>
+    <span class="menu-btn offers-btn">
+      <svg width="16" height="16" style="vertical-align: middle;" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" fill="#7da918" />
+        <text x="12" y="17" text-anchor="middle" font-size="13" fill="#fff" font-family="Arial">&#9733;</text>
+      </svg>
+      <span>Offers</span>
+    </span>
+  </div>
+
+
+
+
+<div class="cart-shell">
+  <h1>Your Basket</h1>
+  <div class="cart-subtotal-bar">
+    <div>
+      <strong>Subtotal ({{ total_items }} item{{ total_items|pluralize }}) :</strong>
+      ₹ {{ subtotal|floatformat:2 }}
+    </div>
+    <a href="{% url 'orders:checkout' %}" class="checkout-btn">Checkout</a>
+    <div class="cart-savings">Savings: ₹ {{ savings|floatformat:2 }}</div>
+  </div>
+  <div class="cart-table-header">
+    <span>Items ({{ total_items }} item{{ total_items|pluralize }})</span>
+    <span>Quantity</span>
+    <span>Sub-total</span>
+  </div>
+  {% for item in cart_items %}
+  <div class="cart-product-card" data-cart-id="{{ item.id }}">
+    <div class="cart-img-details">
+      <img src="{{ item.product.image }}" alt="{{ item.product.name }}" class="cart-img">
+      <div>
+        <div class="cart-product-name">{{ item.product.name }}</div>
+        <div class="cart-product-mrp">
+            ₹<span class="cart-product-price">{{ item.product.price|floatformat:2 }}</span>
+            {% if item.product.mrp and item.product.mrp > item.product.price %}
+                <span class="cart-product-mrp-del">₹{{ item.product.mrp|floatformat:0 }}</span>
+            {% endif %}
+        </div>
+        {% if item.saved %}
+          <div class="cart-saving-text">Saved: ₹{{ item.saved|floatformat:0 }}</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="cart-qty-controls">
+  <button class="cart-qty-btn" onclick="updateCartQty({{ item.id }}, -1)">-</button>
+  <span class="cart-qty-number" id="cart-qty-{{ item.id }}">{{ item.quantity }}</span>
+  <button class="cart-qty-btn" onclick="updateCartQty({{ item.id }}, 1)">+</button>
+</div>
+<div class="cart-item-subtotal" id="cart-item-subtotal-{{ item.id }}">
+  ₹ {{ item.total_price|floatformat:2 }}
+</div>
+<div>
+  <button class="cart-delete-btn" onclick="deleteCartItem({{ item.id }})">Delete</button>
+  <span class="cart-save-later-btn" onclick="alert('Save for later not implemented')">Save for later</span>
+</div>
+
+  </div>
+  {% empty %}
+    <div class="cart-empty">Your cart is empty.</div>
+  {% endfor %}
+</div>
+<script src="{% static 'js/style.js' %}"></script>
+</body>
+</html>

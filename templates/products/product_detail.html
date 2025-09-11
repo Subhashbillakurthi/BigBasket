@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Grocery Shopping and Online Supermarket in India - bigbasket</title>
+    <link rel="shortcut icon"
+        href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3XfekLrDCd5cGYZHG0XelJNQ-hUCq2Jj6Vg&s"
+        type="image/x-icon">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
+    <script src="{% static 'js/style.js' %}"></script>
+
+
+</head>
+
+<body>
+
+    <header class="header-bar">
+        <div class="logo-section">
+            <a href="{% url 'home' %}">
+      <img class="logo-img"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr3xOZrREto9WNjqxVOjZy4D7m7ByimftjKg&s"
+        alt="bigbasket logo"></a>
+        </div>
+
+        <div class="search-bar">
+            <span class="search-icon">
+                <svg height="20" width="20" viewBox="0 0 20 20" fill="none">
+                    <circle cx="9" cy="9" r="7" stroke="#99bb42" stroke-width="2" />
+                    <line x1="14.3" y1="14.3" x2="18" y2="18" stroke="#99bb42" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </span>
+            <input type="text" class="search-input" placeholder="Search for Products..." />
+        </div>
+
+
+        <div class="delivery-section">
+            <div class="delivery-info">
+                <div>
+                    <span class="delivery-icon">&#9889;</span>
+                    <span class="delivery-text">Delivery in <b>5 mins</b></span>
+                </div>
+                <span class="delivery-location">Select Location</span>
+
+            </div>
+        </div>
+
+        {% if user.is_authenticated %}
+
+        <div style="position:relative;display:inline-block;">
+            <div class="cart-icon" onclick="toggleProfileDropdown()" style="cursor:pointer;">
+                <img src="{% static 'images/profileicon.png' %}" alt="profile-btn" id="profile-btn">
+            </div>
+            <div class="dropdown-menu" id="profileDropdown">
+                <a href="{% url 'profile_page' %}" class="dropdown-link">My Account</a>
+                <a href="#" class="dropdown-link">
+                    My Basket
+                    <span class="badge badge-red">0 item</span>
+                </a>
+                <a href="#" class="dropdown-link">My Orders</a>
+                <a href="{% url 'products:wishlist_and_cart' %}" class="dropdown-link">My Wishlist</a>
+                <a href="#" class="dropdown-link">
+                    My Wallet
+                    <span class="badge badge-green">₹0</span>
+                </a>
+                <a href="#" class="dropdown-link">Contact Us</a>
+                <a href="{% url 'logout' %}" class="dropdown-link logout-link">Logout</a>
+            </div>
+        </div>
+
+        {% else %}
+        <a href="{% url 'login' %}" class="login-btn">Login/ Sign Up</a>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+    <div class="cart-icon">
+      <a href="{% url 'cart:cart' %}">
+        <img src="{% static 'images/image.png' %}" alt="cart-icon">
+      </a>
+    </div>
+    {% else %}
+    <div class="cart-icon">
+      <a href="{% url 'login' %}">
+        <img src="{% static 'images/image.png' %}" alt="cart-icon">
+      </a>
+    </div>
+    {% endif %}
+
+    </header>
+
+    <div class="menu-bar">
+        <button class="category-btn">
+            Shop by Category
+            <svg class="chevron" width="18" height="18" viewBox="0 0 20 20">
+                <polygon points="5,8 10,13 15,8" fill="#fff" />
+            </svg>
+        </button>
+        <div class="menu-links-scroll">
+            {% for cat in categories %}
+            <a class="menu-link {% if category and cat.id == category.id %}highlighted{% endif %}"
+            href="{% url 'products:category_products' category_id=cat.id %}">
+            {{ cat.name }}
+            </a>
+            {% endfor %}
+            <svg width="36" height="16" style="vertical-align:middle;" viewBox="0 0 36 20"
+                xmlns="http://www.w3.org/2000/svg">
+                <polyline points="7,5 13,10 7,15" fill="none" stroke="#222" stroke-width="2" />
+                <polyline points="19,5 25,10 19,15" fill="none" stroke="#222" stroke-width="2" />
+            </svg>
+
+        </div>
+
+        <span class="divider"></span>
+
+        <span class="menu-btn smart-basket">
+            <svg width="22" height="22" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="#a2bb78" stroke-width="2" fill="none" />
+                <rect x="8" y="11" width="8" height="5" rx="1.5" fill="#e6f2c8" />
+                <rect x="7" y="7" width="10" height="7" rx="1" stroke="#a2bb78" stroke-width="1" fill="none" />
+            </svg>
+            <span class="smart-basket-label">Smart<br>basket</span>
+        </span>
+        <span class="menu-btn offers-btn">
+            <svg width="16" height="16" style="vertical-align: middle;" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" fill="#7da918" />
+                <text x="12" y="17" text-anchor="middle" font-size="13" fill="#fff" font-family="Arial">&#9733;</text>
+            </svg>
+            <span>Offers</span>
+        </span>
+    </div>
+
+
+
+    <nav class="breadcrumb">
+        <a href="{% url 'home' %}" style="text-decoration: none;color: rgb(84, 79, 79);">Home</a> / Fruits & Vegetables
+        / Fresh Vegetables / {{ product.name }}
+    </nav>
+    <div class="container-breadcrumb">
+        <div class="product-page">
+            <div class="product-gallery">
+                <div class="thumbnails">
+
+                    <img src="{{ product.image }}" alt="{{ product.name }}"
+                        class="{% if forloop.first %}active{% endif %}" onclick="changeImage(this)">
+                    <img src="{{ product.image1 }}" alt="{{ product.name }}"
+                        class="{% if forloop.first %}active{% endif %}" onclick="changeImage(this)">
+                    <img src="{{ product.image2 }}" alt="{{ product.name }}"
+                        class="{% if forloop.first %}active{% endif %}" onclick="changeImage(this)">
+                    <img src="{{ product.image3 }}" alt="{{ product.name }}"
+                        class="{% if forloop.first %}active{% endif %}" onclick="changeImage(this)">
+                    <img src="{{ product.image2 }}" alt="{{ product.name }}"
+                        class="{% if forloop.first %}active{% endif %}" onclick="changeImage(this)">
+
+
+                </div>
+                <div class="main-image-container">
+                    <img id="mainImage" src="{{ product.image }}" alt="main product">
+                </div>
+            </div>
+
+
+            <div class="product-details">
+                <h1 class="title">{{ product.name }}, <span id="main-weight">{{ packs.0.weight }}</span></h1>
+                <p class="mrp">MRP: <span class="strike" id="main-mrp">₹{{ packs.0.mrp }}</span></p>
+                <p class="price">Price: ₹<span id="main-price">{{ packs.0.price }}</span>
+                    <span class="per" id="main-priceperg">(₹{{ packs.0.price_per_g }} / g)</span>
+                </p>
+                <p class="discount">You Save: <span id="main-discount">{{ packs.0.discount_percent }}% OFF</span></p>
+
+                <div class="action-row">
+            <button class="bookmark-btn" title="Add to Wishlist" data-product-id="{{ product.id }}">
+            <span class="material-icons" style="font-size: 18px">bookmark_outline</span>
+            </button>
+            <button class="add-btn" data-product-id="{{ product.id }}">Add to Cart</button>
+          </div>
+                <div class="delivery">🚚 Standard: Get it in 1 day</div>
+
+                {% for pack in packs %}
+                <div class="pack {% if forloop.first %}active{% endif %}" data-weight="{{ pack.weight }}"
+                    data-mrp="{{ pack.mrp }}" data-price="{{ pack.price }}" data-priceperg="{{ pack.price_per_g }}"
+                    data-discount="{{ pack.discount_percent }}">
+                    <span class="pack-qty">{{ pack.weight }}</span>
+                    <span class="pack-price">₹{{ pack.price }} (₹{{ pack.price_per_g }} / g)</span>
+                    <span class="pack-discount">{{ pack.discount_percent }}% OFF</span>
+                    {% if forloop.first %}<span class="pack-check">&#10003;</span>{% endif %}
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+    </div>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+
+<script src="{% static 'js/style.js' %}"></script>
+
+
+</html>
