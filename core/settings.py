@@ -143,5 +143,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rrsubhash342002@gmail.com'
-EMAIL_HOST_PASSWORD = 'fghe wcdr ipad rkkw'   # use App Password, not Gmail login password
+   # use App Password, not Gmail login password
 
